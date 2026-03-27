@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+env/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ML / Data
+*.pkl
+*.h5
+*.pt
+*.safetensors
+mlruns/
+mlflow_artifacts/
+
+# Docker
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node (for frontend later)
+node_modules/
+.next/
+dist/
