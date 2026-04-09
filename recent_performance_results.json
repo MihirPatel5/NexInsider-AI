@@ -1,0 +1,60 @@
+{
+  "test_period": {
+    "start_date": "2026-01-01",
+    "end_date": "2026-04-08",
+    "symbols": [
+      "RELIANCE",
+      "TCS",
+      "INFY",
+      "HDFCBANK",
+      "ICICIBANK"
+    ],
+    "total_samples": 485
+  },
+  "overall_metrics": {
+    "accuracy": 0.37731958762886597,
+    "precision": 0.14237007120841746,
+    "recall": 0.37731958762886597,
+    "f1_score": 0.20673498364096551,
+    "avg_confidence": 0.5
+  },
+  "per_class_metrics": {
+    "SELL": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 125
+    },
+    "HOLD": {
+      "precision": 0.37731958762886597,
+      "recall": 1.0,
+      "support": 183
+    },
+    "BUY": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 177
+    }
+  },
+  "confusion_matrix": [
+    [
+      0,
+      125,
+      0
+    ],
+    [
+      0,
+      183,
+      0
+    ],
+    [
+      0,
+      177,
+      0
+    ]
+  ],
+  "performance_assessment": {
+    "meets_minimum": false,
+    "minimum_threshold": 0.55,
+    "status": "FAIL"
+  }
+}

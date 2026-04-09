@@ -75,16 +75,22 @@ async def mark_delisted_symbols(current_symbols: list[str], exchange: str = "NSE
     """Mark symbols no longer in the instruments list as inactive."""
     if not current_symbols:
         return 0
+    
+    # Build placeholders for IN clause
+    placeholders = ", ".join([f":sym{i}" for i in range(len(current_symbols))])
+    params = {"exchange": exchange}
+    params.update({f"sym{i}": sym for i, sym in enumerate(current_symbols)})
+    
     async with get_session() as session:
         result = await session.execute(
-            text("""
+            text(f"""
                 UPDATE symbol_master
                 SET is_active = FALSE, updated_at = NOW()
                 WHERE exchange = :exchange
-                  AND symbol NOT IN :symbols
+                  AND symbol NOT IN ({placeholders})
                   AND is_active = TRUE
             """),
-            {"exchange": exchange, "symbols": tuple(current_symbols)},
+            params,
         )
         count = result.rowcount
     if count:

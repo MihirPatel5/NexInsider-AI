@@ -1,0 +1,13 @@
+symbol,status,sharpe_ratio,max_drawdown,total_return,win_rate,total_trades,won_trades,lost_trades,final_value,initial_value,error
+RELIANCE,success,-0.9994402827295961,1.2329672035011223,0.39458594864900837,60.0,5.0,3.0,2.0,100395.36546395208,100000.0,
+TCS,success,-1.6761348629366237,0.9151472093149158,-0.12549949170104693,25.0,4.0,1.0,3.0,99874.5792259775,100000.0,
+HDFCBANK,success,-1.7867950190562525,2.0785963971485923,-1.3135763882104432,25.0,8.0,2.0,6.0,98695.01337426262,100000.0,
+INFY,failed,,,,,,,,,,Data loading failed
+ICICIBANK,failed,,,,,,,,,,Data loading failed
+HINDUNILVR,failed,,,,,,,,,,Data loading failed
+ITC,failed,,,,,,,,,,Data loading failed
+SBIN,failed,,,,,,,,,,Data loading failed
+BHARTIARTL,failed,,,,,,,,,,Data loading failed
+KOTAKBANK,failed,,,,,,,,,,Data loading failed
+LT,failed,,,,,,,,,,Data loading failed
+AXISBANK,failed,,,,,,,,,,Data loading failed

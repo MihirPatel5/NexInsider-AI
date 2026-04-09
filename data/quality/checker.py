@@ -15,6 +15,35 @@ from data.db import get_session
 IST = ZoneInfo("Asia/Kolkata")
 
 
+class DataQualityChecker:
+    """
+    Handles data quality checks and anomaly detection.
+    """
+
+    def __init__(self):
+        pass
+
+    async def log_issue(self, **kwargs):
+        """Wrapper for log_quality_issue."""
+        await log_quality_issue(**kwargs)
+
+    def detect_outliers(self, df: pd.DataFrame, z_threshold: float = 3.0) -> pd.DataFrame:
+        """Wrapper for detect_outlier_prices."""
+        return detect_outlier_prices(df, z_threshold)
+
+    def detect_missing(self, df: pd.DataFrame, interval: str) -> list[datetime]:
+        """Wrapper for detect_missing_bars."""
+        return detect_missing_bars(df, interval)
+
+    async def check_stale(self, symbol: str, exchange: str, last_tick: datetime) -> bool:
+        """Wrapper for check_stale_feed."""
+        return await check_stale_feed(symbol, exchange, last_tick)
+
+    async def validate_df(self, df: pd.DataFrame, symbol: str, exchange: str, interval: str, source: str) -> pd.DataFrame:
+        """Wrapper for validate_ohlcv_frame."""
+        return await validate_ohlcv_frame(df, symbol, exchange, interval, source)
+
+
 async def log_quality_issue(
     issue_type: str,
     severity: str = "WARNING",
@@ -25,6 +54,18 @@ async def log_quality_issue(
     affected_time: datetime | None = None,
     detail: str | None = None,
 ) -> None:
+    if affected_time is not None:
+        # Localize naive timestamps to UTC
+        if hasattr(affected_time, "tzinfo") and affected_time.tzinfo is None:
+            if hasattr(affected_time, "tz_localize"):
+                affected_time = affected_time.tz_localize("UTC")
+            else:
+                affected_time = affected_time.replace(tzinfo=ZoneInfo("UTC"))
+        
+        # Convert pandas Timestamp to python datetime
+        if hasattr(affected_time, "to_pydatetime"):
+            affected_time = affected_time.to_pydatetime()
+
     async with get_session() as session:
         await session.execute(
             text("""
@@ -147,6 +188,7 @@ async def validate_ohlcv_frame(
             exchange=exchange,
             source=source,
             interval=interval,
+            affected_time=datetime.now(tz=IST),  # Use current time when no data available
             detail="fetch returned empty DataFrame",
         )
         return df

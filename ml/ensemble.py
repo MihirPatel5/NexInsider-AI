@@ -3,7 +3,7 @@ ml/ensemble.py — Ensemble layer for unified signal generation.
 Combines probabilities from multiple models (XGB, LSTM, Transformer, RL)
 and applies a sentiment multiplier to output the final signal.
 """
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import numpy as np
 from loguru import logger

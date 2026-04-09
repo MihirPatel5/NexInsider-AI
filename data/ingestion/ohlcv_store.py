@@ -32,7 +32,7 @@ async def fetch_and_store_ohlcv(
 
     Returns number of rows upserted.
     """
-    df = router.fetch_ohlcv(symbol, exchange, interval, start, end)
+    df = await router.fetch_ohlcv(symbol, exchange, interval, start, end)
 
     if df.empty:
         logger.warning(f"[ohlcv_store] No data for {symbol}/{interval} {start}→{end}")
@@ -68,8 +68,12 @@ async def fetch_and_store_ohlcv(
 def _df_to_rows(df: pd.DataFrame, symbol: str, exchange: str, interval: str) -> list[dict]:
     rows = []
     for _, r in df.iterrows():
+        t = r["time"]
+        if hasattr(t, "to_pydatetime"):
+            t = t.to_pydatetime()
+            
         rows.append({
-            "time":      r["time"],
+            "time":      t,
             "symbol":    symbol,
             "exchange":  exchange,
             "interval":  interval,
@@ -148,6 +152,11 @@ async def get_ohlcv(
         return pd.DataFrame()
 
     df = pd.DataFrame(rows, columns=["time", "open", "high", "low", "close", "volume", "adj_factor"])
+    
+    # Cast Decimal columns to float for Pandas compatibility
+    for col in ["open", "high", "low", "close", "adj_factor"]:
+        df[col] = df[col].astype(float)
+        
     df["symbol"]   = symbol
     df["exchange"] = exchange
     df["interval"] = interval

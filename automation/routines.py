@@ -7,7 +7,7 @@ import asyncio
 from datetime import datetime
 
 from backend.workers.data_worker import ingest_daily_market_data
-from backend.workers.signal_worker import generate_signal
+from backend.workers.signal_worker import generate_signal, generate_signal_async
 from risk.manager import RiskManager
 
 
@@ -29,12 +29,20 @@ async def run_market_open():
     # 3. Start intraday heartbeat
 
 
-async def run_intraday_loop(watchlist: list):
+async def run_intraday_loop(watchlist: list, sync: bool = False):
     """5-minute re-score loop for all watchlist items + open positions."""
     logger.info(f"[routine] INTRADAY LOOP — Scoring {len(watchlist)} symbols.")
+    results = []
     for symbol in watchlist:
-        # Generate signal asynchronously
-        generate_signal.delay(symbol, interval="5min")
+        if sync:
+            logger.debug(f"[routine] Sync execution for {symbol}")
+            # Directly execute asynchronously in the same event loop to preserve DB pool
+            res = await generate_signal_async(symbol, interval="1d") 
+            results.append(res)
+        else:
+            # Generate signal asynchronously via celery pipeline
+            generate_signal.delay(symbol, interval="5min")
+    return results
 
 
 async def run_market_close():

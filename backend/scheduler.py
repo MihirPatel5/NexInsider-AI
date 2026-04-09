@@ -10,15 +10,23 @@ from pytz import timezone
 
 from backend.workers.data_worker import ingest_daily_market_data
 from backend.workers.signal_worker import generate_signal
+from data.symbol_master.sync import sync_nse_equity_symbols
 
 IST = timezone('Asia/Kolkata')
 scheduler = AsyncIOScheduler(timezone=IST)
 
 # ─── Pre-Market (8:45 AM IST) ─────────────────────────────────────────────────
 @scheduler.scheduled_job(CronTrigger(hour=8, minute=45, day_of_week='mon-fri'))
-def pre_market_routine():
+async def pre_market_routine():
     logger.info("[scheduler] Starting PRE-MARKET routine...")
-    # Trigger symbol sync and news fetch
+    # Sync symbol master from NSE
+    try:
+        count = await sync_nse_equity_symbols()
+        logger.info(f"[scheduler] Symbol sync complete: {count} symbols updated")
+    except Exception as e:
+        logger.error(f"[scheduler] Symbol sync failed: {e}")
+    
+    # Trigger daily market data ingestion
     ingest_daily_market_data.delay()
 
 # ─── Market Open (9:15 AM IST) ────────────────────────────────────────────────

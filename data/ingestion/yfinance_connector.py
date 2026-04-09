@@ -11,6 +11,23 @@ from loguru import logger
 
 from data.ingestion.base import BaseConnector, Quote
 
+import ssl
+from urllib3.poolmanager import PoolManager
+from urllib3.util.ssl_ import create_urllib3_context
+from requests.adapters import HTTPAdapter
+
+class TlsAdapter(HTTPAdapter):
+    """TLS 1.2+ adapter, urllib3 v2.x compatible."""
+    def init_poolmanager(self, connections, maxsize, block=False):
+        ctx = create_urllib3_context()
+        ctx.minimum_version = ssl.TLSVersion.TLSv1_2
+        self.poolmanager = PoolManager(
+            num_pools=connections,
+            maxsize=maxsize,
+            block=block,
+            ssl_context=ctx,
+        )
+
 IST = ZoneInfo("Asia/Kolkata")
 
 # yfinance interval mapping
@@ -27,14 +44,22 @@ YF_INTERVAL_MAP = {
 }
 
 # yfinance ticker suffix for NSE/BSE
+import requests
+
 EXCHANGE_SUFFIX = {
     "NSE": ".NS",
     "BSE": ".BO",
 }
 
-
 class YfinanceConnector(BaseConnector):
     source_name = "yfinance"
+
+    def __init__(self):
+        self.session = requests.Session()
+        self.session.mount("https://", TlsAdapter())
+        self.session.headers.update({
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        })
 
     def _ticker(self, symbol: str, exchange: str) -> str:
         suffix = EXCHANGE_SUFFIX.get(exchange.upper(), ".NS")
@@ -62,7 +87,8 @@ class YfinanceConnector(BaseConnector):
             end=end + timedelta(days=1),
             interval=yf_interval,
             progress=False,
-            auto_adjust=True,   # handles splits/dividends automatically
+            auto_adjust=True,
+            session=self.session,
         )
 
         if df.empty:

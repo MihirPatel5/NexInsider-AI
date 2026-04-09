@@ -1,7 +1,5 @@
-"""
-infra/db/init/002_audit_logs.sql — Immutable audit trail.
-Implements triggers to prevent deletion or modification of order/trade history.
-"""
+-- infra/db/init/002_audit_logs.sql — Immutable audit trail.
+-- Implements triggers to prevent deletion or modification of order/trade history.
 
 -- 1. Create Order Audit Table
 CREATE TABLE IF NOT EXISTS order_audit_log (

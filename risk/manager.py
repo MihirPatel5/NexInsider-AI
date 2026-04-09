@@ -16,10 +16,10 @@ class RiskManager:
         self.daily_pnl = 0.0
         self.status = "OPERATIONAL"  # OPERATIONAL, HALTED, KILL_SWITCH
         
-        # Risk Configs from settings
-        self.max_daily_loss_pct = settings.max_daily_loss_pct # e.g. 0.02
-        self.max_drawdown_pct   = settings.max_drawdown_pct   # e.g. 0.10
-        self.max_position_size  = settings.max_position_size_pct # e.g. 0.10
+        # Risk Configs from settings (convert from % scale to fraction)
+        self.max_daily_loss_pct = settings.max_daily_loss_pct / 100.0
+        self.max_drawdown_pct   = settings.max_drawdown_pct / 100.0
+        self.max_position_size  = settings.max_position_pct / 100.0
 
     def check_circuit_breakers(self, current_pnl: float) -> bool:
         """

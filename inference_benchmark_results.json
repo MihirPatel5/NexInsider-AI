@@ -1,0 +1,42 @@
+{
+  "timestamp": "2026-04-08T17:25:53.865063",
+  "benchmarks": {
+    "single_symbol": {
+      "iterations": 50,
+      "mean_ms": 30.008087158203125,
+      "median_ms": 29.836297035217285,
+      "std_ms": 2.8961625570764076,
+      "min_ms": 23.859024047851562,
+      "max_ms": 38.48075866699219,
+      "p95_ms": 34.75353717803955,
+      "p99_ms": 38.32876920700073
+    },
+    "batch_inference": {
+      "batch_size": 100,
+      "total_time_s": 2.9096617698669434,
+      "mean_time_per_symbol_ms": 29.026997089385986,
+      "throughput_symbols_per_sec": 34.368255800595314
+    },
+    "concurrent_inference": {
+      "num_symbols": 50,
+      "num_workers": 4,
+      "total_time_s": 2.0878138542175293,
+      "mean_time_per_symbol_ms": 164.18087005615234,
+      "throughput_symbols_per_sec": 23.948495168281656,
+      "speedup_vs_sequential": 3.9318847732640427
+    },
+    "memory_usage": {
+      "baseline_mb": 118.26171875,
+      "after_load_mb": 118.26171875,
+      "after_inference_mb": 118.26171875,
+      "load_overhead_mb": 0.0,
+      "inference_overhead_mb": 0.0,
+      "total_mb": 118.26171875
+    }
+  },
+  "assessment": {
+    "single_symbol_acceptable": true,
+    "batch_acceptable": true,
+    "memory_acceptable": true
+  }
+}

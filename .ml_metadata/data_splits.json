@@ -1,0 +1,225 @@
+{
+  "splits": [
+    {
+      "split_name": "split_0",
+      "timestamp": "2026-04-08T16:42:55.972989",
+      "total_samples": 1000,
+      "train_samples": 600,
+      "val_samples": 200,
+      "holdout_samples": 200,
+      "train_date_range": [
+        "2023-01-01T00:00:00+00:00",
+        "2024-08-22T00:00:00+00:00"
+      ],
+      "val_date_range": [
+        "2024-08-23T00:00:00+00:00",
+        "2025-03-10T00:00:00+00:00"
+      ],
+      "holdout_date_range": [
+        "2025-03-11T00:00:00+00:00",
+        "2025-09-26T00:00:00+00:00"
+      ]
+    },
+    {
+      "split_name": "split_1",
+      "timestamp": "2026-04-08T16:43:32.070812",
+      "total_samples": 1000,
+      "train_samples": 600,
+      "val_samples": 200,
+      "holdout_samples": 200,
+      "train_date_range": [
+        "2023-01-01T00:00:00+00:00",
+        "2024-08-22T00:00:00+00:00"
+      ],
+      "val_date_range": [
+        "2024-08-23T00:00:00+00:00",
+        "2025-03-10T00:00:00+00:00"
+      ],
+      "holdout_date_range": [
+        "2025-03-11T00:00:00+00:00",
+        "2025-09-26T00:00:00+00:00"
+      ]
+    },
+    {
+      "split_name": "split_2",
+      "timestamp": "2026-04-08T16:44:18.006090",
+      "total_samples": 1000,
+      "train_samples": 600,
+      "val_samples": 200,
+      "holdout_samples": 200,
+      "train_date_range": [
+        "2023-01-01T00:00:00+00:00",
+        "2024-08-22T00:00:00+00:00"
+      ],
+      "val_date_range": [
+        "2024-08-23T00:00:00+00:00",
+        "2025-03-10T00:00:00+00:00"
+      ],
+      "holdout_date_range": [
+        "2025-03-11T00:00:00+00:00",
+        "2025-09-26T00:00:00+00:00"
+      ]
+    },
+    {
+      "split_name": "split_3",
+      "timestamp": "2026-04-08T16:54:46.284382",
+      "total_samples": 1000,
+      "train_samples": 600,
+      "val_samples": 200,
+      "holdout_samples": 200,
+      "train_date_range": [
+        "2023-01-01T00:00:00+00:00",
+        "2024-08-22T00:00:00+00:00"
+      ],
+      "val_date_range": [
+        "2024-08-23T00:00:00+00:00",
+        "2025-03-10T00:00:00+00:00"
+      ],
+      "holdout_date_range": [
+        "2025-03-11T00:00:00+00:00",
+        "2025-09-26T00:00:00+00:00"
+      ]
+    },
+    {
+      "split_name": "split_4",
+      "timestamp": "2026-04-08T17:11:55.108480",
+      "total_samples": 1000,
+      "train_samples": 600,
+      "val_samples": 200,
+      "holdout_samples": 200,
+      "train_date_range": [
+        "2023-01-01T00:00:00+00:00",
+        "2024-08-22T00:00:00+00:00"
+      ],
+      "val_date_range": [
+        "2024-08-23T00:00:00+00:00",
+        "2025-03-10T00:00:00+00:00"
+      ],
+      "holdout_date_range": [
+        "2025-03-11T00:00:00+00:00",
+        "2025-09-26T00:00:00+00:00"
+      ]
+    },
+    {
+      "split_name": "split_5",
+      "timestamp": "2026-04-08T17:42:04.978061",
+      "total_samples": 1000,
+      "train_samples": 600,
+      "val_samples": 200,
+      "holdout_samples": 200,
+      "train_date_range": [
+        "2023-01-01T00:00:00+00:00",
+        "2024-08-22T00:00:00+00:00"
+      ],
+      "val_date_range": [
+        "2024-08-23T00:00:00+00:00",
+        "2025-03-10T00:00:00+00:00"
+      ],
+      "holdout_date_range": [
+        "2025-03-11T00:00:00+00:00",
+        "2025-09-26T00:00:00+00:00"
+      ]
+    },
+    {
+      "split_name": "split_6",
+      "timestamp": "2026-04-08T17:42:35.303373",
+      "total_samples": 1000,
+      "train_samples": 600,
+      "val_samples": 200,
+      "holdout_samples": 200,
+      "train_date_range": [
+        "2023-01-01T00:00:00+00:00",
+        "2024-08-22T00:00:00+00:00"
+      ],
+      "val_date_range": [
+        "2024-08-23T00:00:00+00:00",
+        "2025-03-10T00:00:00+00:00"
+      ],
+      "holdout_date_range": [
+        "2025-03-11T00:00:00+00:00",
+        "2025-09-26T00:00:00+00:00"
+      ]
+    },
+    {
+      "split_name": "split_7",
+      "timestamp": "2026-04-08T17:53:08.515717",
+      "total_samples": 1000,
+      "train_samples": 600,
+      "val_samples": 200,
+      "holdout_samples": 200,
+      "train_date_range": [
+        "2023-01-01T00:00:00+00:00",
+        "2024-08-22T00:00:00+00:00"
+      ],
+      "val_date_range": [
+        "2024-08-23T00:00:00+00:00",
+        "2025-03-10T00:00:00+00:00"
+      ],
+      "holdout_date_range": [
+        "2025-03-11T00:00:00+00:00",
+        "2025-09-26T00:00:00+00:00"
+      ]
+    },
+    {
+      "split_name": "split_8",
+      "timestamp": "2026-04-08T18:15:54.329898",
+      "total_samples": 1000,
+      "train_samples": 600,
+      "val_samples": 200,
+      "holdout_samples": 200,
+      "train_date_range": [
+        "2023-01-01T00:00:00+00:00",
+        "2024-08-22T00:00:00+00:00"
+      ],
+      "val_date_range": [
+        "2024-08-23T00:00:00+00:00",
+        "2025-03-10T00:00:00+00:00"
+      ],
+      "holdout_date_range": [
+        "2025-03-11T00:00:00+00:00",
+        "2025-09-26T00:00:00+00:00"
+      ]
+    },
+    {
+      "split_name": "split_9",
+      "timestamp": "2026-04-08T18:17:07.299105",
+      "total_samples": 1000,
+      "train_samples": 600,
+      "val_samples": 200,
+      "holdout_samples": 200,
+      "train_date_range": [
+        "2023-01-01T00:00:00+00:00",
+        "2024-08-22T00:00:00+00:00"
+      ],
+      "val_date_range": [
+        "2024-08-23T00:00:00+00:00",
+        "2025-03-10T00:00:00+00:00"
+      ],
+      "holdout_date_range": [
+        "2025-03-11T00:00:00+00:00",
+        "2025-09-26T00:00:00+00:00"
+      ]
+    },
+    {
+      "split_name": "split_10",
+      "timestamp": "2026-04-08T18:20:54.399656",
+      "total_samples": 1000,
+      "train_samples": 600,
+      "val_samples": 200,
+      "holdout_samples": 200,
+      "train_date_range": [
+        "2023-01-01T00:00:00+00:00",
+        "2024-08-22T00:00:00+00:00"
+      ],
+      "val_date_range": [
+        "2024-08-23T00:00:00+00:00",
+        "2025-03-10T00:00:00+00:00"
+      ],
+      "holdout_date_range": [
+        "2025-03-11T00:00:00+00:00",
+        "2025-09-26T00:00:00+00:00"
+      ]
+    }
+  ],
+  "holdout_access_log": []
+}

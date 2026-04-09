@@ -1,0 +1,4 @@
+symbol,final_value,total_return,sharpe_ratio,max_drawdown,total_trades,trades_per_year,won_trades,lost_trades,win_rate,status
+RELIANCE,100000.0,0.0,0,0.0,0,0.0,0,0,0,success
+TCS,100000.0,0.0,0,0.0,0,0.0,0,0,0,success
+HDFCBANK,100000.0,0.0,0,0.0,0,0.0,0,0,0,success

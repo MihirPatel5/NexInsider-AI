@@ -39,9 +39,15 @@ def detect_regime(
 
     nifty_df = nifty_df.sort_values("time").tail(ema_period + 50).copy()
 
-    import pandas_ta as ta
-    nifty_df.ta.ema(length=ema_period, append=True)
-    nifty_df.ta.adx(length=adx_period, append=True)
+    from ta.trend import EMAIndicator, ADXIndicator
+    
+    # Calculate EMA
+    ema_indicator = EMAIndicator(close=nifty_df["close"], window=ema_period)
+    nifty_df[f"EMA_{ema_period}"] = ema_indicator.ema_indicator()
+    
+    # Calculate ADX
+    adx_indicator = ADXIndicator(high=nifty_df["high"], low=nifty_df["low"], close=nifty_df["close"], window=adx_period)
+    nifty_df[f"ADX_{adx_period}"] = adx_indicator.adx()
 
     last = nifty_df.iloc[-1]
     ema_col = f"EMA_{ema_period}"
@@ -66,10 +72,12 @@ def detect_regime(
     else:
         regime = "SIDEWAYS"
 
+    ema_str = f"{ema_val:.1f}" if ema_val is not None else "N/A"
+    adx_str = f"{adx_val:.1f}" if adx_val is not None else "N/A"
+    
     logger.info(
         f"[regime] VIX={vix:.1f} | Close={close:.1f} | "
-        f"EMA{ema_period}={ema_val:.1f if ema_val else 'N/A'} | "
-        f"ADX={adx_val:.1f if adx_val else 'N/A'} → {regime}"
+        f"EMA{ema_period}={ema_str} | ADX={adx_str} → {regime}"
     )
     return regime
 

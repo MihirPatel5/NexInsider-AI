@@ -13,8 +13,8 @@ class Settings(BaseSettings):
     )
 
     # ── Database ──────────────────────────────────────────────────────────────
-    postgres_user: str = "algo"
-    postgres_password: str = "algo_secret"
+    postgres_user: str = "postgres"
+    postgres_password: str = "postgres"
     postgres_db: str = "algotrading"
     postgres_host: str = "localhost"
     postgres_port: int = 5432

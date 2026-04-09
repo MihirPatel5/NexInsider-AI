@@ -1,0 +1,2 @@
+symbol,baseline_sharpe,optimized_sharpe,sharpe_improvement,baseline_return,optimized_return,return_improvement,baseline_win_rate,optimized_win_rate,win_rate_improvement,baseline_trades,optimized_trades,trades_increase
+RELIANCE,-5.224057845462617,-5.604305623414001,-0.380247777951384,-0.47460282404113735,-0.435322184103245,0.039280639937892325,0.0,0.0,0.0,1,1,0

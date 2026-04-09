@@ -114,24 +114,27 @@ def apply_backward_adjustment(df: pd.DataFrame, actions: pd.DataFrame) -> pd.Dat
         actions: DataFrame from get_adjustment_factors()
 
     Returns:
-        df with 'adj_close', 'adj_factor' columns added.
+        df with 'adj_open', 'adj_high', 'adj_low', 'adj_close', 'adj_factor' columns added.
     """
+    df = df.copy().sort_values("time").reset_index(drop=True)
+    
     if actions.empty:
-        df["adj_close"] = df["close"]
         df["adj_factor"] = 1.0
+        for col in ["open", "high", "low", "close"]:
+            df[f"adj_{col}"] = df[col]
         return df
 
-    df = df.copy().sort_values("time").reset_index(drop=True)
     df["adj_factor"] = 1.0
 
+    # Apply adjustments: for each action, multiply all bars BEFORE ex_date by adj_factor
     for _, action in actions.iterrows():
         ex_date = pd.Timestamp(action["ex_date"]).tz_localize("Asia/Kolkata")
         mask = df["time"] < ex_date
         df.loc[mask, "adj_factor"] *= action["adj_factor"]
 
+    # Apply the cumulative adjustment factor to all OHLC columns
     for col in ["open", "high", "low", "close"]:
         df[f"adj_{col}"] = df[col] * df["adj_factor"]
 
-    df["adj_close"] = df["adj_close"]  # already set above
     logger.debug(f"[corp_action] Applied {len(actions)} adjustments to {len(df)} bars")
     return df

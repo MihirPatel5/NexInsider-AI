@@ -1,0 +1,4 @@
+symbol,status,error
+RELIANCE,failed,'avg_sharpe'
+TCS,failed,'avg_sharpe'
+HDFCBANK,failed,'avg_sharpe'

@@ -1,0 +1,2 @@
+initial_value,final_value,total_return,sharpe_ratio,max_drawdown,total_trades,won_trades,lost_trades,win_rate,trading_days,trades_per_day,avg_profit_per_trade
+100000,112581.65469100009,12.581654691000091,0.20394102906779404,6.473015040536622,34,18,15,52.94117647058824,60,0.5666666666666667,0.37004866738235564

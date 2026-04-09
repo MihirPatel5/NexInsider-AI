@@ -5,6 +5,7 @@ Uses stable-baselines3 to train the policy in our TradingEnv.
 from stable_baselines3 import PPO
 from stable_baselines3.common.vec_env import DummyVecEnv
 import pandas as pd
+import numpy as np
 from loguru import logger
 import mlflow
 

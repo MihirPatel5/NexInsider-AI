@@ -45,53 +45,76 @@ def _parse_date(entry) -> datetime:
         return datetime.now(tz=timezone.utc)
 
 
-async def fetch_and_store_news() -> int:
+class RSSNewsIngestor:
     """
-    Fetch all configured RSS feeds and insert new items into the DB.
-    Returns total count of new items stored.
+    Handles news ingestion from RSS feeds.
+    Provides methods to fetch individual feeds and sync all configured feeds to the DB.
     """
-    total_new = 0
-    for feed_config in FEEDS:
+
+    def __init__(self):
+        self.feeds = FEEDS
+
+    async def fetch_feed(self, url: str) -> List[dict]:
+        """Fetch and parse a single RSS feed."""
         try:
-            feed = feedparser.parse(feed_config["url"])
-            entries = feed.entries[:50]  # cap at 50 per feed per run
+            feed = feedparser.parse(url)
+            return feed.entries
         except Exception as exc:
-            logger.error(f"[news] Failed to parse {feed_config['name']}: {exc}")
-            continue
+            logger.error(f"[news] Failed to fetch feed {url}: {exc}")
+            return []
 
-        for entry in entries:
-            published_at = _parse_date(entry)
-            title   = entry.get("title", "").strip()
-            summary = entry.get("summary", "").strip()
-            url     = entry.get("link", "").strip()
-
-            if not title or not url:
+    async def fetch_and_store_news(self) -> int:
+        """
+        Fetch all configured RSS feeds and insert new items into the DB.
+        Returns total count of new items stored.
+        """
+        total_new = 0
+        for feed_config in self.feeds:
+            entries = await self.fetch_feed(feed_config["url"])
+            if not entries:
                 continue
 
-            try:
-                async with get_session() as session:
-                    result = await session.execute(
-                        text("""
-                            INSERT INTO news_items (published_at, title, summary, source, url)
-                            VALUES (:published_at, :title, :summary, :source, :url)
-                            ON CONFLICT (url) DO NOTHING
-                            RETURNING id
-                        """),
-                        dict(
-                            published_at=published_at,
-                            title=title,
-                            summary=summary,
-                            source=feed_config["name"],
-                            url=url,
-                        ),
-                    )
-                    if result.rowcount:
-                        total_new += 1
-            except Exception as exc:
-                logger.debug(f"[news] Skipped duplicate or error: {exc}")
+            entries = entries[:50]  # cap at 50 per feed per run
 
-    logger.info(f"[news] Stored {total_new} new articles across {len(FEEDS)} feeds")
-    return total_new
+            for entry in entries:
+                published_at = _parse_date(entry)
+                title   = entry.get("title", "").strip()
+                summary = entry.get("summary", "").strip()
+                url     = entry.get("link", "").strip()
+
+                if not title or not url:
+                    continue
+
+                try:
+                    async with get_session() as session:
+                        result = await session.execute(
+                            text("""
+                                INSERT INTO news_items (published_at, title, summary, source, url)
+                                VALUES (:published_at, :title, :summary, :source, :url)
+                                ON CONFLICT (url) DO NOTHING
+                                RETURNING id
+                            """),
+                            dict(
+                                published_at=published_at,
+                                title=title,
+                                summary=summary,
+                                source=feed_config["name"],
+                                url=url,
+                            ),
+                        )
+                        if result.rowcount:
+                            total_new += 1
+                except Exception as exc:
+                    logger.debug(f"[news] Skipped duplicate or error: {exc}")
+
+        logger.info(f"[news] Stored {total_new} new articles across {len(self.feeds)} feeds")
+        return total_new
+
+
+async def fetch_and_store_news() -> int:
+    """Wrapper for backward compatibility."""
+    ingestor = RSSNewsIngestor()
+    return await ingestor.fetch_and_store_news()
 
 
 async def get_unprocessed_news(limit: int = 100) -> List[dict]:
