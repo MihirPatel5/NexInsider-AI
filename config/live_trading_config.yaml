@@ -1,0 +1,97 @@
+# Live Trading Configuration
+
+# Broker settings
+broker:
+  type: "angelone_data"  # Options: "mock", "angelone_data", "zerodha"
+  
+  # Zerodha settings (when type is "zerodha")
+  zerodha:
+    api_key: "YOUR_API_KEY_HERE"
+    api_secret: "YOUR_API_SECRET_HERE"
+    access_token: null  # Will be generated on first login
+  
+  # Angel One settings (when type is "angelone_data")
+  # Uses SmartAPI for REAL MARKET DATA (no trading)
+  angelone_data:
+    initial_balance: 100000.0
+    # API credentials loaded from .env:
+    # SMART_API_KEY and SMART_SCRET_KEY
+  
+  # Mock broker settings (for testing)
+  mock:
+    initial_balance: 100000.0
+
+# Strategy settings
+strategy:
+  symbol: "NIFTY50"
+  ml_confidence_threshold: 0.25  # Lowered from 0.35 for more trades
+  stop_loss_pct: 0.008  # 0.8%
+  take_profit_pct: 0.015  # 1.5%
+  trailing_stop_pct: 0.005  # 0.5%
+  max_position_pct: 0.40  # 40% of capital (increased from 30%)
+  max_daily_loss_pct: 0.03  # 3% circuit breaker
+  max_trades_per_day: 15
+  
+  # Model paths
+  model_dir: "models/trained"
+
+# Trading hours (IST)
+trading_hours:
+  market_open: "09:15"
+  skip_until: "09:30"  # Skip first 15 minutes
+  lunch_start: "12:30"
+  lunch_end: "13:30"
+  square_off_time: "15:10"
+  market_close: "15:15"
+
+# Risk management
+risk:
+  pre_trade_checks: true
+  position_size_validation: true
+  daily_loss_monitoring: true
+  circuit_breaker_enabled: true
+  emergency_stop_enabled: true
+
+# Monitoring
+monitoring:
+  enable_dashboard: true
+  dashboard_port: 8080
+  enable_alerts: true
+  alert_channels:
+    - "console"  # Options: "console", "email", "sms", "telegram"
+  
+  # Alert triggers
+  alerts:
+    on_trade_execution: true
+    on_stop_loss: true
+    on_daily_loss_threshold: 0.02  # Alert at 2% loss
+    on_system_error: true
+    on_connection_loss: true
+
+# Logging
+logging:
+  level: "INFO"  # Options: "DEBUG", "INFO", "WARNING", "ERROR"
+  log_to_file: true
+  log_file: "logs/live_trading.log"
+  log_rotation: "1 day"
+  log_retention: "30 days"
+
+# Database
+database:
+  host: "localhost"
+  port: 5432
+  name: "algotrading"
+  user: "postgres"
+  password: "postgres"
+  
+  # Store live trades
+  store_trades: true
+  store_ticks: false  # Warning: High volume
+  store_candles: true
+
+# Paper trading mode
+paper_trading:
+  enabled: false  # Set to true for paper trading
+  initial_balance: 100000.0
+  simulate_slippage: true
+  slippage_pct: 0.001  # 0.1%

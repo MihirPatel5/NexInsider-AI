@@ -266,14 +266,26 @@ def train_models(X_train, X_test, y_train, y_test, feature_names: list) -> Dict:
 
 async def main():
     """Main training pipeline."""
+    import argparse
+    
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(description='Train intraday ML models')
+    parser.add_argument('--symbol', type=str, default='NIFTY50',
+                       help='Symbol to train on (default: NIFTY50)')
+    parser.add_argument('--interval', type=str, default='5m',
+                       help='Candle interval (default: 5m)')
+    args = parser.parse_args()
+    
     logger.info("="*80)
     logger.info("INTRADAY ML MODEL TRAINING")
     logger.info("="*80)
     logger.info(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    logger.info(f"Symbol: {args.symbol}")
+    logger.info(f"Interval: {args.interval}")
     logger.info("")
     
     # 1. Load intraday data
-    df = await load_intraday_data(symbol="NIFTY50", interval="5m")
+    df = await load_intraday_data(symbol=args.symbol, interval=args.interval)
     
     if df is None or df.empty:
         logger.error("Failed to load data!")
@@ -300,8 +312,8 @@ async def main():
     
     df = create_intraday_labels(
         df,
-        forward_candles=2,  # 10 minutes for 5m interval (AGGRESSIVE)
-        threshold=0.002,  # 0.2% (LOWER for more signals)
+        forward_candles=6,  # 30 minutes for 5m interval
+        threshold=0.003,  # 0.3%
     )
     
     # 4. Prepare training data
@@ -333,17 +345,17 @@ async def main():
     logger.info("="*80)
     
     # Save XGBoost
-    xgb_path = MODEL_DIR / "xgboost_intraday.joblib"
+    xgb_path = MODEL_DIR / f"xgboost_intraday_{args.symbol}.joblib"
     joblib.dump(results['xgboost']['model'], xgb_path)
     logger.info(f"✅ Saved XGBoost: {xgb_path}")
     
     # Save Random Forest
-    rf_path = MODEL_DIR / "random_forest_intraday.joblib"
+    rf_path = MODEL_DIR / f"random_forest_intraday_{args.symbol}.joblib"
     joblib.dump(results['random_forest']['model'], rf_path)
     logger.info(f"✅ Saved Random Forest: {rf_path}")
     
     # Save feature names
-    features_path = MODEL_DIR / "feature_names_intraday.joblib"
+    features_path = MODEL_DIR / f"feature_names_intraday_{args.symbol}.joblib"
     joblib.dump(feature_names, features_path)
     logger.info(f"✅ Saved feature names: {features_path}")
     
@@ -357,9 +369,9 @@ async def main():
     logger.info(f"  XGBoost accuracy: {results['xgboost']['accuracy'] * 100:.1f}%")
     logger.info(f"  Random Forest accuracy: {results['random_forest']['accuracy'] * 100:.1f}%")
     logger.info(f"\nModels saved to: {MODEL_DIR}")
-    logger.info(f"  - xgboost_intraday.joblib")
-    logger.info(f"  - random_forest_intraday.joblib")
-    logger.info(f"  - feature_names_intraday.joblib")
+    logger.info(f"  - xgboost_intraday_{args.symbol}.joblib")
+    logger.info(f"  - random_forest_intraday_{args.symbol}.joblib")
+    logger.info(f"  - feature_names_intraday_{args.symbol}.joblib")
     logger.info("="*80)
     
     return 0

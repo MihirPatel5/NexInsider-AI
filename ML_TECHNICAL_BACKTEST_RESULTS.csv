@@ -1,0 +1,2 @@
+strategy,initial_value,final_value,total_return_pct,sharpe_ratio,max_drawdown_pct,total_trades,won_trades,lost_trades,win_rate_pct,start_date,end_date
+ML + Technical,100000.0,100000.0,0.0,0,0.0,0,0,0,0,2025-10-13 03:45:00+00:00,2026-04-03 08:00:00+00:00

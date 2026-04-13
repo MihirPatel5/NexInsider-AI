@@ -36,11 +36,11 @@ class IntradayMLStrategy(bt.Strategy):
     """
     
     params = (
-        ("ml_confidence_threshold", 0.30),  # VERY LOW threshold for maximum trades
+        ("ml_confidence_threshold", 0.25),  # Lowered for more trades (was 0.30)
         ("stop_loss_pct", 0.008),           # 0.8% stop loss (tighter for intraday)
         ("take_profit_pct", 0.015),         # 1.5% take profit (smaller target)
         ("trailing_stop_pct", 0.005),       # 0.5% trailing stop
-        ("max_position_pct", 0.30),         # 30% of portfolio per position
+        ("max_position_pct", 0.40),         # 40% of portfolio per position (increased from 30%)
         ("max_daily_loss_pct", 0.03),       # 3% max daily loss (circuit breaker)
         ("max_trades_per_day", 15),         # Max 15 trades per day
         
@@ -291,65 +291,6 @@ class IntradayMLStrategy(bt.Strategy):
             logger.error(f"Error getting prediction: {e}")
             return None
     
-    def _check_technical_signals(self) -> Optional[str]:
-        """
-        Check technical indicators for trading signals.
-        
-        This provides additional signals beyond ML predictions
-        to increase trade frequency.
-        
-        Returns:
-            "BUY", "SELL", or None
-        """
-        if not self.p.use_technical_signals:
-            return None
-        
-        try:
-            # Need enough data for indicators
-            if len(self.data) < 50:
-                return None
-            
-            # Get recent data
-            closes = [self.data.close[-i] for i in range(min(50, len(self.data)) - 1, -1, -1)]
-            highs = [self.data.high[-i] for i in range(min(50, len(self.data)) - 1, -1, -1)]
-            lows = [self.data.low[-i] for i in range(min(50, len(self.data)) - 1, -1, -1)]
-            
-            # Calculate RSI (simple version)
-            deltas = np.diff(closes)
-            gains = np.where(deltas > 0, deltas, 0)
-            losses = np.where(deltas < 0, -deltas, 0)
-            
-            avg_gain = np.mean(gains[-14:]) if len(gains) >= 14 else 0
-            avg_loss = np.mean(losses[-14:]) if len(losses) >= 14 else 0
-            
-            if avg_loss == 0:
-                rsi = 100
-            else:
-                rs = avg_gain / avg_loss
-                rsi = 100 - (100 / (1 + rs))
-            
-            # RSI signals
-            if rsi < self.p.rsi_oversold:
-                return "BUY"  # Oversold - potential bounce
-            elif rsi > self.p.rsi_overbought:
-                return "SELL"  # Overbought - potential reversal
-            
-            # Price momentum (simple)
-            current_price = closes[-1]
-            sma_20 = np.mean(closes[-20:]) if len(closes) >= 20 else current_price
-            
-            # Strong momentum signal
-            if current_price > sma_20 * 1.005:  # 0.5% above SMA
-                return "BUY"
-            elif current_price < sma_20 * 0.995:  # 0.5% below SMA
-                return "SELL"
-            
-            return None
-        
-        except Exception as e:
-            logger.error(f"Error checking technical signals: {e}")
-            return None
-    
     def _extract_features(self) -> Optional[np.ndarray]:
         """
         Extract features from current bar using FeatureEngineer.
@@ -397,7 +338,7 @@ class IntradayMLStrategy(bt.Strategy):
     
     def _handle_entry(self, prediction: Dict, current_time: time):
         """
-        Handle entry logic based on ML prediction and technical signals.
+        Handle entry logic based on ML prediction.
         
         Args:
             prediction: Dict with signal, confidence
@@ -406,41 +347,27 @@ class IntradayMLStrategy(bt.Strategy):
         signal = prediction["signal"]
         confidence = prediction["confidence"]
         
-        # Check if ML signal meets threshold
-        ml_signal_valid = signal == "BUY" and confidence >= self.p.ml_confidence_threshold
-        
-        # Check technical signals
-        tech_signal = self._check_technical_signals()
-        tech_signal_valid = tech_signal == "BUY"
-        
-        # Trade if EITHER ML or technical signal is valid
-        if not (ml_signal_valid or tech_signal_valid):
+        # Only trade on BUY signals (can extend to SELL for shorting)
+        if signal != "BUY":
             return
         
-        # Determine signal source for logging
-        if ml_signal_valid and tech_signal_valid:
-            signal_source = "ML+TECH"
-            final_confidence = confidence
-        elif ml_signal_valid:
-            signal_source = "ML"
-            final_confidence = confidence
-        else:
-            signal_source = "TECH"
-            final_confidence = 0.40  # Assign moderate confidence to technical signals
+        # Check confidence threshold
+        if confidence < self.p.ml_confidence_threshold:
+            return
         
         # Calculate position size
         price = self.data.close[0]
         stop_loss_price = price * (1 - self.p.stop_loss_pct)
         
-        qty = self._calculate_position_size(price, stop_loss_price, final_confidence)
+        qty = self._calculate_position_size(price, stop_loss_price, confidence)
         
         if qty <= 0:
             return
         
         # Place order
         self.log(
-            f"BUY SIGNAL ({signal_source}): {qty} shares @ ₹{price:.2f} "
-            f"(conf={final_confidence:.3f})"
+            f"BUY SIGNAL: {qty} shares @ ₹{price:.2f} "
+            f"(conf={confidence:.3f})"
         )
         
         self.order = self.buy(size=qty)

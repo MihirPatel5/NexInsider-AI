@@ -95,15 +95,12 @@ def run_backtest(df: pd.DataFrame, initial_cash: float = 100_000) -> dict:
     # Add strategy
     cerebro.addstrategy(
         IntradayMLStrategy,
-        ml_confidence_threshold=0.30,
+        ml_confidence_threshold=0.35,
         stop_loss_pct=0.008,
         take_profit_pct=0.015,
         max_position_pct=0.30,
         max_daily_loss_pct=0.03,
         max_trades_per_day=15,
-        use_technical_signals=True,
-        rsi_oversold=35,
-        rsi_overbought=65,
     )
     
     # Prepare data for backtrader
