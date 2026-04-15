@@ -1,4 +1,4 @@
-symbol,final_value,total_return,sharpe_ratio,max_drawdown,total_trades,trades_per_year,won_trades,lost_trades,win_rate,status
-RELIANCE,100000.0,0.0,0,0.0,0,0.0,0,0,0,success
-TCS,100000.0,0.0,0,0.0,0,0.0,0,0,0,success
-HDFCBANK,100000.0,0.0,0,0.0,0,0.0,0,0,0,success
+symbol,start_date,end_date,years,initial_value,final_value,total_return,sharpe_ratio,max_drawdown,total_trades,trades_per_year,won_trades,lost_trades,win_rate,status
+RELIANCE,2024-01-01,2026-04-08,2.2669404517453797,100000,100000.0,0.0,0,0.0,0,0.0,0,0,0,success
+TCS,2024-01-01,2026-04-08,2.2669404517453797,100000,100000.0,0.0,0,0.0,0,0.0,0,0,0,success
+HDFCBANK,2024-01-01,2026-04-08,2.2669404517453797,100000,100000.0,0.0,0,0.0,0,0.0,0,0,0,success

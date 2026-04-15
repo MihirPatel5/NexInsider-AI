@@ -1,0 +1,70 @@
+================================================================================
+DATABASE BACKUP MANIFEST
+================================================================================
+Backup Date: 2026-04-15 12:14:38
+Database: algotrading
+Total Candles: 66,430
+Symbols: 7
+Date Range: 2025-10-13 09:15:00+05:30 to 2026-04-15 10:55:00+05:30
+
+FILES CREATED:
+--------------------------------------------------------------------------------
+All Data: all_data_backup_20260415_121433.csv
+  Size: 5.10 MB
+  Candles: 66,430
+
+Symbol Files:
+  BANKNIFTY_backup_20260415_121436.csv
+    Size: 0.78 MB
+    Candles: 9,476
+  HDFCBANK_backup_20260415_121436.csv
+    Size: 0.73 MB
+    Candles: 9,476
+  ICICIBANK_backup_20260415_121436.csv
+    Size: 0.73 MB
+    Candles: 9,476
+  INFY_backup_20260415_121436.csv
+    Size: 0.69 MB
+    Candles: 9,476
+  NIFTY50_backup_20260415_121436.csv
+    Size: 0.76 MB
+    Candles: 9,574
+  RELIANCE_backup_20260415_121436.csv
+    Size: 0.73 MB
+    Candles: 9,476
+  TCS_backup_20260415_121436.csv
+    Size: 0.68 MB
+    Candles: 9,476
+
+================================================================================
+SYMBOL STATISTICS
+================================================================================
+Symbol             Candles First Date           Last Date           
+----------------------------------------------------------------------
+BANKNIFTY            9,476 2025-10-13 09:15:00+05:30 2026-04-03 13:30:00+05:30
+HDFCBANK             9,476 2025-10-13 09:15:00+05:30 2026-04-03 13:30:00+05:30
+ICICIBANK            9,476 2025-10-13 09:15:00+05:30 2026-04-03 13:30:00+05:30
+INFY                 9,476 2025-10-13 09:15:00+05:30 2026-04-03 13:30:00+05:30
+NIFTY50              9,574 2025-10-13 09:15:00+05:30 2026-04-15 10:55:00+05:30
+RELIANCE             9,476 2025-10-13 09:15:00+05:30 2026-04-03 13:30:00+05:30
+TCS                  9,476 2025-10-13 09:15:00+05:30 2026-04-03 13:30:00+05:30
+----------------------------------------------------------------------
+TOTAL               66,430
+
+================================================================================
+RESTORE INSTRUCTIONS
+================================================================================
+
+To restore from backup:
+
+1. Restore all data:
+   python3 scripts/restore_from_backup.py --file all_data_backup_20260415_121433.csv
+
+2. Restore specific symbol:
+   python3 scripts/restore_from_backup.py --file SYMBOL_backup_TIMESTAMP.csv
+
+3. Or use PostgreSQL COPY command:
+   COPY ohlcv_intraday(time, symbol, exchange, interval, open, high, low, close, volume)
+   FROM '/path/to/all_data_backup_20260415_121433.csv'
+   WITH (FORMAT csv, HEADER true);
+

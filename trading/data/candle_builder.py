@@ -58,6 +58,10 @@ class CandleBuilder:
         """
         candle = self.current_candles[symbol]
         
+        # Log first tick for debugging
+        if candle['tick_count'] == 0:
+            logger.info(f"First tick received for {symbol}: price={price:.2f}, volume={volume}")
+        
         # Calculate candle boundaries
         candle_start = self._get_candle_start_time(timestamp)
         candle_end = candle_start + timedelta(minutes=self.interval_minutes)
@@ -126,7 +130,7 @@ class CandleBuilder:
             'tick_count': candle['tick_count'],
         }
         
-        logger.debug(
+        logger.info(
             f"Candle closed: {symbol} | {candle['start_time']} | "
             f"O:{candle['open']:.2f} H:{candle['high']:.2f} "
             f"L:{candle['low']:.2f} C:{candle['close']:.2f} V:{candle['volume']}"

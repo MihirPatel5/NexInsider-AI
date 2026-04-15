@@ -287,6 +287,12 @@ class AngelOneDataBroker(BaseBroker):
         self.subscribed_symbols.extend(symbols)
         logger.info(f"📊 Subscribed to Angel One data: {symbols}")
         logger.info("💡 Using simulated ticks (full WebSocket requires authentication)")
+        
+        # Start tick simulation if not already running
+        if not hasattr(self, '_tick_task') or self._tick_task is None:
+            self._tick_task = asyncio.create_task(self.simulate_realistic_ticks())
+            logger.info("✅ Tick simulation started")
+        
         return True
     
     async def unsubscribe_ticks(self, symbols: List[str]) -> bool:
@@ -295,6 +301,13 @@ class AngelOneDataBroker(BaseBroker):
             if symbol in self.subscribed_symbols:
                 self.subscribed_symbols.remove(symbol)
         logger.info(f"📊 Unsubscribed from ticks: {symbols}")
+        
+        # Stop tick simulation if no more subscriptions
+        if not self.subscribed_symbols and hasattr(self, '_tick_task') and self._tick_task:
+            self._tick_task.cancel()
+            self._tick_task = None
+            logger.info("✅ Tick simulation stopped")
+        
         return True
     
     def on_tick(self, callback):

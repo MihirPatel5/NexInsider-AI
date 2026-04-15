@@ -189,10 +189,17 @@ async def run_backtest(
         drawdown = results["drawdown"]["max"]["drawdown"]
         total_return = results["returns"].get("rtot", 0) * 100
         
-        trades = results["trades"]
-        total_trades = getattr(getattr(trades, 'total', None), 'total', 0) or 0
-        won_trades = getattr(getattr(trades, 'won', None), 'total', 0) or 0
-        lost_trades = getattr(getattr(trades, 'lost', None), 'total', 0) or 0
+        # Handle trades safely
+        trades = results.get("trades", {})
+        try:
+            total_trades = trades.total.total if hasattr(trades, 'total') and hasattr(trades.total, 'total') else 0
+            won_trades = trades.won.total if hasattr(trades, 'won') and hasattr(trades.won, 'total') else 0
+            lost_trades = trades.lost.total if hasattr(trades, 'lost') and hasattr(trades.lost, 'total') else 0
+        except (AttributeError, KeyError):
+            total_trades = 0
+            won_trades = 0
+            lost_trades = 0
+        
         win_rate = (won_trades / total_trades * 100) if total_trades > 0 else 0
         
         final_value = results["final_value"]
